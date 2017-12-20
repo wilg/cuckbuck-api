@@ -2,6 +2,9 @@ const express = require('express')
 const cors = require('cors')
 const CuckbuckAPI = require('./api')
 
+const https = require('https')
+const fs = require('fs')
+
 class APIServer {
 
   constructor() {
@@ -27,7 +30,20 @@ class APIServer {
 
     const port = process.env.PORT || 8081
 
-    this.app.listen(port, () => console.log(`API server listening on port ${port}!`))
+    if (fs.existsSync('./ssl/key.pem')) {
+      const httpsOptions = {
+        key: fs.readFileSync('./ssl/key.pem'),
+        cert: fs.readFileSync('./ssl/cert.pem')
+      }
+      https.createServer(httpsOptions, this.app).listen(port, () => {
+        console.log(`HTTPS server listening on port ${port}!`)
+      })
+    } else {
+      this.app.listen(port, () => {
+        console.log(`HTTP server listening on port ${port}!`)
+      })
+    }
+
   }
 
 }
