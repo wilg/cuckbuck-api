@@ -1,0 +1,11 @@
+{
+  "name": "cuckbuck-api",
+  "version": "1.0.0",
+  "description": "An API for cuck-based bucks.",
+  "main": "src/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "jayson": "^2.0.5"
+  }
+}
