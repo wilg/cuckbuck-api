@@ -1,7 +1,3 @@
-const CuckbuckAPI = require('./api')
+const APIServer = require('./server')
 
-const api = new CuckbuckAPI()
-
-api.blockCount().then((result) => {
-  console.log(result)
-})
+new APIServer()

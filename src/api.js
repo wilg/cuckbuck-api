@@ -11,6 +11,10 @@ class CuckbuckAPI {
     return (await this.request('getblockcount')).count
   }
 
+  async lastBlockHeader() {
+    return (await this.request('getlastblockheader')).block_header
+  }
+
   async request(rpcName) {
     return new Promise((resolve, reject) => {
       this.client.request(rpcName, [], null, function (err, msg) {
