@@ -1,10 +1,13 @@
 const express = require('express')
+const cors = require('cors')
 const CuckbuckAPI = require('./api')
 
 class APIServer {
 
   constructor() {
     this.app = express()
+    this.app.use(cors())
+
     this.api = new CuckbuckAPI()
 
     this.app.get('/info.json', async (req, res) => {
