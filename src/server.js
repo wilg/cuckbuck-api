@@ -8,12 +8,18 @@ class APIServer {
     this.api = new CuckbuckAPI()
 
     this.app.get('/info.json', async (req, res) => {
-      const blockCount = await this.api.blockCount()
-      const lastBlockHeader = await this.api.lastBlockHeader()
-      res.json({
-        blockCount,
-        lastBlockHeader
-      })
+      try {
+        const blockCount = await this.api.blockCount()
+        const lastBlockHeader = await this.api.lastBlockHeader()
+        res.json({
+          blockCount,
+          lastBlockHeader
+        })
+      } catch (e) {
+        res.json({
+          error: e.message
+        })
+      }
     })
 
     const port = process.env.PORT || 8081
