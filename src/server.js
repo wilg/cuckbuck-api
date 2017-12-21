@@ -4,6 +4,9 @@ const CuckbuckAPI = require('./api')
 
 const https = require('https')
 const fs = require('fs')
+const { promisify } = require('util')
+
+const readFileAsync = promisify(fs.readFile)
 
 class APIServer {
 
@@ -15,12 +18,15 @@ class APIServer {
 
     this.app.get('/info.json', async (req, res) => {
       try {
-        const blockCount = await this.api.blockCount()
-        const lastBlockHeader = await this.api.lastBlockHeader()
-        let currencyData = null
-        if (process.env.CURRENCY_DATA_PATH) {
-          currencyData = JSON.parse(fs.readFileSync(process.env.CURRENCY_DATA_PATH))
-        }
+        const [
+          blockCount,
+          lastBlockHeader,
+          currencyData,
+        ] = await Promise.all([
+          this.api.blockCount(),
+          this.api.lastBlockHeader(),
+          this.getCurrencyData()
+        ])
         res.json({
           blockCount,
           lastBlockHeader,
@@ -49,6 +55,15 @@ class APIServer {
       })
     }
 
+  }
+
+  async getCurrencyData() {
+    if (process.env.CURRENCY_DATA_PATH) {
+      const data = await readFileAsync(process.env.CURRENCY_DATA_PATH)
+      return JSON.parse(data)
+    } else {
+      null
+    }
   }
 
 }
