@@ -17,9 +17,14 @@ class APIServer {
       try {
         const blockCount = await this.api.blockCount()
         const lastBlockHeader = await this.api.lastBlockHeader()
+        let currencyData = null
+        if (process.env.CURRENCY_DATA_PATH) {
+          currencyData = JSON.parse(fs.readFileSync(process.env.CURRENCY_DATA_PATH))
+        }
         res.json({
           blockCount,
-          lastBlockHeader
+          lastBlockHeader,
+          currencyData,
         })
       } catch (e) {
         res.json({
